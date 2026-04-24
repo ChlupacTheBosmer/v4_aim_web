@@ -1,0 +1,1888 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>V4·AIM · International V4 AI Methods Conference</title>
+<meta name="description" content="A cross-disciplinary Visegrad conference on AI methods. 23–25 April 2027, Kostelec nad Černými Lesy, Czech Republic." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="brand/tokens.css" />
+<link rel="icon" type="image/svg+xml" href="brand/favicon.svg" />
+
+<style>
+  /* ─── Reset & base ──────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--page);
+    color: var(--v4-ink);
+    font-family: var(--v4-font-body);
+    font-size: var(--v4-size-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  p { margin: 0 0 16px; max-width: 68ch; text-wrap: pretty; }
+
+  /* ─── Tokens, local convenience ─── */
+  :root {
+    --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+    --container: 1200px;
+
+    /* Ground tiers, lightest (page) to darkest (onyx).
+       Page is pure white; panels and section bands use subtle cool greys
+       so content stays neutral with no warm/beige cast. */
+    --page:      #FFFFFF;
+    --surface:   #F3F4F6;   /* cool light grey — cards/panels */
+    --surface-2: #E9EAEE;   /* slightly darker cool grey — section bands */
+  }
+
+  .wrap { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+  @media (max-width: 720px) { .wrap { padding: 0 16px; } }
+
+  /* ─── Typography helpers ───────────────────────────────────────── */
+  .mono { font-family: var(--v4-font-display); }
+  .eyebrow {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--v4-muted);
+  }
+  .eyebrow .num { color: var(--v4-accent); margin-right: 10px; }
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  /* When a section is banded (darker ground), its panels flip to white so
+     they still lift off the surface. */
+  section.chap.band .prog-item,
+  section.chap.band .contact-card,
+  section.chap.band .status-block { background: #FFFFFF; }
+  section.chap.band .prog-item:hover { background: var(--surface); }
+  section.chap.band .partner:hover { background: rgba(17,17,17,0.04); }
+
+  /* ─── Nav ──────────────────────────────────────────────────────── */
+  nav.top {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: saturate(140%) blur(10px);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 0.5px solid var(--v4-rule);
+  }
+  nav.top .row {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  nav.top .brand {
+    display: inline-flex; align-items: center; gap: 14px;
+    color: var(--v4-ink);
+  }
+  nav.top .brand svg.mark { width: 22px; height: 22px; }
+  nav.top .brand .wm {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+  }
+  nav.top .brand .wm .dot { opacity: 0.65; }
+  nav.top ul {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; gap: 28px;
+    font-family: var(--v4-font-display);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  nav.top ul a {
+    color: var(--v4-ink); opacity: 0.7;
+    transition: opacity 150ms var(--ease);
+    padding: 4px 0;
+    border-bottom: 1px solid transparent;
+  }
+  nav.top ul a:hover { opacity: 1; border-bottom-color: var(--v4-accent); }
+  nav.top .nav-right { display: flex; align-items: center; gap: 24px; }
+  nav.top .status {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--v4-font-display);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--v4-muted);
+    text-transform: uppercase;
+  }
+  nav.top .status::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--v4-accent);
+    box-shadow: 0 0 0 0 rgba(230,57,70,0.5);
+    animation: pulse 2.4s infinite var(--ease);
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(230,57,70,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(230,57,70,0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    nav.top .status::before { animation: none; }
+  }
+  @media (max-width: 820px) {
+    nav.top ul { display: none; }
+  }
+
+  /* ─── Hero ─────────────────────────────────────────────────────── */
+  .hero {
+    padding: 80px 0 96px;
+    background: var(--v4-onyx);
+    color: var(--v4-bone);
+    border-bottom: 0.5px solid rgba(242,242,242,0.12);
+    position: relative;
+  }
+  .hero .meta-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 64px;
+    padding-bottom: 24px;
+    border-bottom: 0.5px solid rgba(242,242,242,0.14);
+  }
+  .hero .meta-row .cell {
+    display: grid; gap: 6px;
+  }
+  .hero .meta-row .cell .k {
+    font-family: var(--v4-font-display);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9CA3AF;
+  }
+  .hero .meta-row .cell .v {
+    font-family: var(--v4-font-display);
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: var(--v4-bone);
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 720px) {
+    .hero .meta-row { grid-template-columns: 1fr; gap: 12px; }
+  }
+
+  .hero h1 {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: clamp(30px, 4.2vw, 56px);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin: 0 0 28px;
+    text-wrap: balance;
+    /* Desktop default: centered. Mobile override below flips to left. */
+    text-align: center;
+    max-width: 22ch;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--v4-bone);
+  }
+  .hero h1 .aim {
+    position: relative;
+    display: inline-block;
+  }
+  .hero h1 .aim::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0.06em;
+    height: 0.14em;
+    background: var(--v4-accent);
+    z-index: -1;
+    opacity: 1;
+  }
+  .hero h1 .brk { color: #6B7280; font-weight: 400; }
+
+  .hero .lede {
+    font-family: var(--v4-font-serif);
+    font-size: clamp(15px, 1.3vw, 18px);
+    line-height: 1.55;
+    color: #C9CAD0;
+    max-width: 58ch;
+    /* Desktop: centered block; mobile override flips to left. */
+    margin: 0 auto 40px;
+    font-style: italic;
+    text-align: center;
+  }
+  /* Two ledes: default (desktop) shows the longer copy; mobile override below
+     swaps in the brief mobile version for better scannability on phones. */
+  .hero .lede.mobile { display: none; }
+  /* Red accent on the hero headline — picks out the V4 tag and the period
+     so the composition has a punch of the brand color before AIM underline. */
+  .hero h1 .hl { color: var(--v4-accent); }
+
+  .hero .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    /* Desktop: center the hero column; mobile override below flips to start. */
+    justify-items: center;
+  }
+
+  .hero .cta-group {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    justify-content: center;
+  }
+  /* Buttons on the dark hero: primary stays filled white, ghost gets a light
+     border and white text so it's legible against black. */
+  .hero .btn {
+    background: var(--v4-bone);
+    color: var(--v4-ink);
+    border-color: var(--v4-bone);
+  }
+  .hero .btn:hover {
+    background: var(--v4-accent);
+    color: #fff;
+    border-color: var(--v4-accent);
+  }
+  .hero .btn.ghost {
+    background: transparent;
+    color: var(--v4-bone);
+    border-color: rgba(242,242,242,0.35);
+  }
+  .hero .btn.ghost:hover {
+    background: transparent;
+    color: var(--v4-accent);
+    border-color: var(--v4-accent);
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    padding: 14px 22px;
+    border-radius: 4px;
+    border: 0.5px solid var(--v4-ink);
+    background: var(--v4-ink);
+    color: var(--page);
+    transition: transform 150ms var(--ease), background 150ms var(--ease);
+  }
+  .btn:hover { background: var(--v4-accent); border-color: var(--v4-accent); }
+  .btn.ghost {
+    background: transparent; color: var(--v4-ink);
+    border: 0.5px solid rgba(17,17,17,0.4);
+  }
+  .btn.ghost:hover {
+    background: transparent; color: var(--v4-accent);
+    border-color: var(--v4-accent);
+  }
+  .btn .arr { transition: transform 150ms var(--ease); }
+  .btn:hover .arr { transform: translateX(3px); }
+
+  /* Hero mark, centered above the headline on desktop; left-aligned on mobile. */
+  .hero .mark-stage {
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .hero .mark-stage svg {
+    width: 72px;
+    height: auto;
+    color: var(--v4-bone);
+    overflow: visible;
+  }
+  /* Ring-pulse from center of the crosshair: concentric red rings expand outward and fade. */
+  .hero .mark-stage .ring {
+    animation: ringpulse 3.6s infinite var(--ease);
+  }
+  .hero .mark-stage .ring-1 { animation-delay: 0s; }
+  .hero .mark-stage .ring-2 { animation-delay: 1.2s; }
+  .hero .mark-stage .ring-3 { animation-delay: 2.4s; }
+  @keyframes ringpulse {
+    0%   { r: 2;  opacity: 0.75; stroke-width: 1.4; }
+    80%  { r: 22; opacity: 0;    stroke-width: 0.4; }
+    100% { r: 22; opacity: 0;    stroke-width: 0.4; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero .mark-stage .ring { animation: none; opacity: 0; }
+  }
+
+  /* ─── Section scaffolding ──────────────────────────────────────── */
+  section.chap {
+    padding: 96px 0;
+    border-bottom: 0.5px solid var(--v4-rule);
+    background: var(--page);
+    scroll-margin-top: 80px;
+  }
+  /* Alternate bands so sections have visual rhythm against the white page. */
+  section.chap.band { background: var(--surface-2); }
+  section.chap > .wrap > header.chap-h {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 48px;
+    align-items: start;
+    margin-bottom: 64px;
+  }
+  section.chap > .wrap > header.chap-h .eyebrow {
+    padding-top: 10px;
+  }
+  section.chap h2 {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    /* Slightly smaller + wider max-width so long titles don't wrap into
+       tall stacks on desktop. Mobile override below. */
+    font-size: clamp(26px, 3vw, 38px);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    margin: 0;
+    max-width: 44ch;
+    text-wrap: balance;
+  }
+  @media (max-width: 720px) {
+    section.chap { padding: 64px 0; }
+    section.chap > .wrap > header.chap-h {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+  }
+
+  /* ─── About ────────────────────────────────────────────────────── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  /* Single-column variant — used now that the Objectives aside is gone. */
+  .about-grid.single { grid-template-columns: 1fr; max-width: 900px; }
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+  .about-grid .prose p {
+    font-size: 17px;
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+  .about-grid .prose p.lede {
+    font-family: var(--v4-font-serif);
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--v4-ink);
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+  /* Fact blocks — replaces the long three-paragraph block with a scannable
+     index-card layout. Each row: numbered eyebrow label + a one-line body.
+     Reads fast on both desktop and mobile. */
+  .fact-blocks {
+    margin: 0;
+    display: grid;
+    gap: 0;
+    border-top: 0.5px solid var(--v4-rule);
+  }
+  .fact-blocks .fact {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+    padding: 20px 0;
+    border-bottom: 0.5px solid var(--v4-rule);
+    align-items: baseline;
+  }
+  .fact-blocks .fact dt {
+    font-family: var(--v4-font-display);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--v4-ink);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 0;
+  }
+  .fact-blocks .fact dt .fn {
+    color: var(--v4-accent);
+    font-size: 11px;
+  }
+  .fact-blocks .fact dd {
+    margin: 0;
+    font-family: var(--v4-font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--v4-ink);
+    max-width: 52ch;
+  }
+  .fact-blocks .fact dd b { font-weight: 600; color: var(--v4-ink); }
+  @media (max-width: 720px) {
+    .fact-blocks .fact {
+      grid-template-columns: 1fr;
+      gap: 6px;
+      padding: 16px 0;
+    }
+    .fact-blocks .fact dd { font-size: 15px; }
+  }
+  .obj-list {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    gap: 0;
+    border-top: 0.5px solid var(--v4-rule);
+  }
+  .obj-list li {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 0.5px solid var(--v4-rule);
+    align-items: baseline;
+  }
+  .obj-list li .n {
+    font-family: var(--v4-font-display);
+    font-size: 11px;
+    color: var(--v4-accent);
+    letter-spacing: 0.04em;
+  }
+  .obj-list li .t {
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--v4-ink);
+  }
+
+  /* ─── Conference / program ────────────────────────────────────── */
+  .conf-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 900px) {
+    .conf-grid { grid-template-columns: 1fr; gap: 16px; }
+  }
+  .dateplate {
+    grid-column: span 5;
+    background: var(--v4-onyx);
+    color: var(--v4-bone);
+    border-radius: 8px;
+    padding: 40px;
+    display: grid;
+    gap: 24px;
+    align-content: space-between;
+    min-height: 360px;
+  }
+  .dateplate .big {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: clamp(44px, 5vw, 72px);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+  }
+  .dateplate .big .mo { color: var(--v4-muted); }
+  .dateplate .meta {
+    display: grid; gap: 14px;
+    font-family: var(--v4-font-display);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  .dateplate .meta .row {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-top: 0.5px solid rgba(242,242,242,0.12);
+  }
+  .dateplate .meta .row:last-child { border-bottom: 0.5px solid rgba(242,242,242,0.12); }
+  .dateplate .meta .row .k { color: #9CA3AF; text-transform: uppercase; }
+  .dateplate .meta .row .v { color: var(--v4-bone); }
+
+  .program {
+    grid-column: span 7;
+    display: grid;
+    gap: 16px;
+  }
+  @media (max-width: 900px) {
+    .dateplate, .program { grid-column: span 1; }
+  }
+  .prog-item {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 24px;
+    padding: 22px 24px;
+    border: 0.5px solid var(--v4-rule);
+    border-radius: 8px;
+    background: var(--surface);
+    align-items: start;
+    transition: border-color 150ms var(--ease), background 150ms var(--ease);
+  }
+  .prog-item:hover { border-color: rgba(17,17,17,0.3); background: #EEF0F3; }
+  .prog-item .idx {
+    font-family: var(--v4-font-display);
+    font-size: 11px;
+    color: var(--v4-accent);
+    letter-spacing: 0.04em;
+    padding-top: 2px;
+  }
+  .prog-item .body h3 {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: 17px;
+    margin: 0 0 6px;
+    letter-spacing: -0.005em;
+  }
+  .prog-item .body p {
+    font-size: 14px;
+    color: var(--v4-muted);
+    margin: 0;
+    line-height: 1.5;
+  }
+  .prog-item .count {
+    font-family: var(--v4-font-display);
+    font-size: 11px;
+    color: var(--v4-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding-top: 4px;
+    white-space: nowrap;
+  }
+  @media (max-width: 600px) {
+    .prog-item { grid-template-columns: 40px 1fr; gap: 12px; padding: 18px 18px; }
+    .prog-item .count { grid-column: 2; padding-top: 6px; }
+  }
+
+  .conf-note {
+    margin-top: 32px;
+    padding: 20px 24px;
+    border-left: 2px solid var(--v4-accent);
+    background: rgba(230,57,70,0.04);
+    font-size: 15px;
+    color: var(--v4-ink);
+    max-width: 720px;
+    border-radius: 2px;
+  }
+  .conf-note .label {
+    font-family: var(--v4-font-display);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--v4-accent);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* ─── Open Call placeholder ───────────────────────────────────── */
+  .call {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width: 900px) { .call { grid-template-columns: 1fr; } }
+  .call .status-block {
+    padding: 32px;
+    background: var(--surface);
+    border: 0.5px solid var(--v4-rule);
+    border-radius: 8px;
+  }
+  .call .status-block .tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--v4-font-display);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--v4-muted);
+    padding: 5px 10px;
+    background: rgba(17,17,17,0.04);
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  .call .status-block .tag::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--v4-muted);
+  }
+  .call .status-block h3 {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: 22px;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  .call .status-block p { font-size: 15px; color: var(--v4-muted); margin: 0 0 16px; }
+  .call .mail-wait {
+    display: flex; gap: 8px;
+    padding: 6px;
+    border: 0.5px solid var(--v4-rule);
+    border-radius: 4px;
+    background: #FFFFFF;
+    margin-top: 8px;
+  }
+  .call .mail-wait input {
+    flex: 1;
+    border: 0; background: transparent; padding: 10px 12px;
+    font-family: var(--v4-font-body);
+    font-size: 14px;
+    color: var(--v4-ink);
+    outline: none;
+  }
+  .call .mail-wait input::placeholder { color: var(--v4-muted); }
+  .call .mail-wait button {
+    font-family: var(--v4-font-display);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    padding: 10px 16px;
+    border: 0;
+    background: var(--v4-ink);
+    color: var(--page);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 150ms var(--ease);
+  }
+  .call .mail-wait button:hover { background: var(--v4-accent); }
+  .call .mail-wait.ok button { background: #166534; }
+
+  .selection {
+    display: grid; gap: 0;
+    border-top: 0.5px solid var(--v4-rule);
+  }
+  .selection .step {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 0.5px solid var(--v4-rule);
+  }
+  .selection .step .n {
+    font-family: var(--v4-font-display);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--v4-ink);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    padding-top: 2px;
+  }
+  .selection .step h4 {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: 15px;
+    margin: 0 0 6px;
+    letter-spacing: -0.005em;
+  }
+  .selection .step p {
+    font-size: 14px;
+    color: var(--v4-muted);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* ─── Partners ─────────────────────────────────────────────────── */
+  .partners {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 0.5px solid var(--v4-rule);
+    border-left: 0.5px solid var(--v4-rule);
+  }
+  @media (max-width: 720px) {
+    .partners { grid-template-columns: 1fr; border-left: 0; }
+  }
+  .partner {
+    display: grid;
+    grid-template-columns: 32px 1fr 20px;
+    gap: 16px;
+    padding: 24px 28px;
+    border-bottom: 0.5px solid var(--v4-rule);
+    border-right: 0.5px solid var(--v4-rule);
+    align-items: start;
+    background: transparent;
+    transition: background 150ms var(--ease);
+  }
+  @media (max-width: 720px) { .partner { border-right: 0; } }
+  .partner:hover { background: rgba(17,17,17,0.02); }
+  .partner .idx {
+    font-family: var(--v4-font-display);
+    font-size: 11px;
+    color: var(--v4-accent);
+    letter-spacing: 0.04em;
+    padding-top: 4px;
+  }
+  .partner .name {
+    display: grid; gap: 6px;
+  }
+  .partner .name .org {
+    font-family: var(--v4-font-body);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--v4-ink);
+    line-height: 1.3;
+  }
+  .partner .name .dept {
+    font-size: 13px;
+    color: var(--v4-muted);
+    line-height: 1.4;
+  }
+  .partner .name .country {
+    font-family: var(--v4-font-display);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--v4-muted);
+    margin-top: 2px;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .partner .name .country.lead::before {
+    content: "LEAD";
+    color: var(--v4-accent);
+    padding: 2px 6px;
+    border: 0.5px solid var(--v4-accent);
+    border-radius: 3px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .partner .arrow {
+    padding-top: 6px;
+    color: var(--v4-muted);
+    transition: transform 150ms var(--ease), color 150ms var(--ease);
+  }
+  .partner:hover .arrow { color: var(--v4-accent); transform: translate(3px, -3px); }
+
+  /* ─── Contact ──────────────────────────────────────────────────── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; gap: 40px; } }
+  .contact-card {
+    padding: 40px;
+    background: var(--surface);
+    border: 0.5px solid var(--v4-rule);
+    border-radius: 8px;
+  }
+  .contact-card .name {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: -0.005em;
+    margin: 0 0 4px;
+  }
+  .contact-card .role {
+    font-size: 14px;
+    color: var(--v4-muted);
+    margin-bottom: 28px;
+  }
+  .contact-card .dl {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: 8px 20px;
+    font-size: 14px;
+    padding: 16px 0;
+    border-top: 0.5px solid var(--v4-rule);
+  }
+  .contact-card .dl dt {
+    font-family: var(--v4-font-display);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--v4-muted);
+    padding-top: 3px;
+  }
+  .contact-card .dl dd {
+    margin: 0;
+    font-family: var(--v4-font-body);
+    color: var(--v4-ink);
+  }
+  .contact-card .dl dd a { border-bottom: 1px solid var(--v4-accent); padding-bottom: 1px; }
+  .contact-card .dl dd a:hover { color: var(--v4-accent); }
+
+  .contact-aux {
+    display: grid; gap: 28px;
+    font-size: 14px;
+    color: var(--v4-muted);
+    line-height: 1.55;
+  }
+  .contact-aux h4 {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--v4-ink);
+    margin: 0 0 8px;
+  }
+  .contact-aux p { margin: 0; }
+  .contact-aux .addr { color: var(--v4-ink); font-size: 15px; }
+
+  /* ─── Funding / Visegrad ──────────────────────────────────────── */
+  .funding {
+    background: var(--v4-onyx);
+    color: var(--v4-bone);
+    padding: 96px 0;
+    border-top: 0.5px solid rgba(242,242,242,0.12);
+  }
+  .funding .fgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  @media (max-width: 900px) { .funding .fgrid { grid-template-columns: 1fr; gap: 48px; } }
+  .funding .vf-block {
+    display: grid; gap: 32px;
+    padding: 48px;
+    background: #E8EAED;
+    border-radius: 8px;
+    color: var(--v4-ink);
+    align-items: center;
+  }
+  .funding .vf-block a.vf {
+    display: grid;
+    place-items: center;
+    padding: 28px 32px;
+    border: 0.5px solid rgba(17,17,17,0.12);
+    border-radius: 6px;
+    transition: border-color 150ms var(--ease);
+  }
+  .funding .vf-block a.vf:hover { border-color: var(--v4-ink); }
+  .funding .vf-block a.vf img.vf-logotype { width: 100%; max-width: 280px; height: auto; display: block; }
+  .funding .vf-block .caption {
+    font-family: var(--v4-font-display);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--v4-muted);
+  }
+  .funding .fgrid .copy h2 {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: clamp(26px, 3vw, 36px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0 0 24px;
+    color: var(--v4-bone);
+  }
+  .funding .fgrid .copy p {
+    font-size: 16px;
+    color: #C9CAD0;
+    line-height: 1.6;
+    max-width: 54ch;
+  }
+  .funding .fgrid .copy .ids {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 4px 24px;
+    font-family: var(--v4-font-display);
+    font-size: 12px;
+    color: #9CA3AF;
+    padding-top: 20px;
+    border-top: 0.5px solid rgba(242,242,242,0.12);
+    max-width: 380px;
+  }
+  .funding .fgrid .copy .ids .k { color: #6B7280; letter-spacing: 0.06em; text-transform: uppercase; font-size: 10px; }
+  .funding .fgrid .copy .ids .v { color: var(--v4-bone); font-variant-numeric: tabular-nums; }
+
+  /* ─── Footer ───────────────────────────────────────────────────── */
+  footer.site {
+    background: var(--v4-onyx);
+    color: var(--v4-bone);
+    padding: 72px 0 32px;
+  }
+  footer.site .ftop {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 0.5px solid rgba(242,242,242,0.12);
+  }
+  @media (max-width: 900px) { footer.site .ftop { grid-template-columns: 1fr 1fr; gap: 32px; } }
+  @media (max-width: 560px) { footer.site .ftop { grid-template-columns: 1fr; } }
+  footer.site .brand-blk svg.mark { width: 28px; height: 28px; color: var(--v4-bone); margin-bottom: 16px; }
+  footer.site .brand-blk .wm {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: var(--v4-bone);
+  }
+  footer.site .brand-blk .wm .dot { opacity: 0.65; }
+  footer.site .brand-blk p {
+    font-size: 13px;
+    color: #9CA3AF;
+    max-width: 36ch;
+    line-height: 1.55;
+  }
+  footer.site h4 {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9CA3AF;
+    margin: 0 0 16px;
+  }
+  footer.site ul {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: 10px;
+    font-size: 13px;
+  }
+  footer.site ul a {
+    color: var(--v4-bone); opacity: 0.85;
+    transition: color 150ms var(--ease), opacity 150ms var(--ease);
+  }
+  footer.site ul a:hover { color: var(--v4-accent); opacity: 1; }
+  footer.site .fbottom {
+    padding-top: 32px;
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 24px; flex-wrap: wrap;
+    font-family: var(--v4-font-display);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: #6B7280;
+  }
+  footer.site .fbottom a:hover { color: var(--v4-accent); }
+  footer.site .support {
+    grid-column: 1 / -1;
+    padding-top: 40px;
+    margin-top: 16px;
+    border-top: 0.5px solid rgba(242,242,242,0.12);
+    font-family: var(--v4-font-serif);
+    font-style: italic;
+    color: #C9CAD0;
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 76ch;
+  }
+
+  /* ─── Skip link (a11y) ─────────────────────────────────────────── */
+  .skip {
+    position: absolute; left: -9999px; top: 0;
+    background: var(--v4-ink); color: var(--page);
+    padding: 8px 14px; font-family: var(--v4-font-display); font-size: 12px;
+    z-index: 100;
+  }
+  .skip:focus { left: 8px; top: 8px; }
+
+  /* ─── Focus styles ─────────────────────────────────────────────── */
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--v4-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  /* ─────────────────────────────────────────────────────────────────
+     MOBILE LAYER — applies at ≤720px.
+     Mobile-first intent: comfortable single-column stack, generous touch
+     targets (52px min), type scale tightened (h2 ~34–38, h1 ~44), hero
+     swaps the animated crosshair for a static mark, Conference program
+     and Partners become horizontal scroll-snap carousels, the date-plate
+     sticks to the top of the conference section while scrolling, and a
+     floating "Join waitlist" CTA appears once the user scrolls past hero.
+     ───────────────────────────────────────────────────────────────── */
+
+  /* Hamburger button + overlay: base styles (hidden on desktop). */
+  nav.top .nav-burger {
+    display: none;
+    width: 44px; height: 44px;
+    background: transparent;
+    border: 0.5px solid var(--v4-rule);
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  nav.top .nav-burger span {
+    display: block;
+    width: 18px; height: 1.5px;
+    background: var(--v4-ink);
+    transition: transform 180ms var(--ease);
+  }
+  nav.top .nav-burger[aria-expanded="true"] span:first-child {
+    transform: translateY(3.25px) rotate(45deg);
+  }
+  nav.top .nav-burger[aria-expanded="true"] span:last-child {
+    transform: translateY(-3.25px) rotate(-45deg);
+  }
+
+  .nav-overlay {
+    position: fixed; inset: 0;
+    background: rgba(255,255,255,0.98);
+    backdrop-filter: saturate(140%) blur(18px);
+    -webkit-backdrop-filter: saturate(140%) blur(18px);
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 200ms var(--ease);
+  }
+  .nav-overlay.open { opacity: 1; }
+  .nav-overlay-inner {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 20px 24px 40px;
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 32px;
+  }
+  .nav-overlay-top {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-overlay-top .wm {
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+  }
+  .nav-overlay-top .wm .dot { color: var(--v4-accent); }
+  .nav-overlay-close {
+    min-height: 44px;
+    padding: 10px 18px;
+    background: transparent;
+    border: 0.5px solid var(--v4-ink);
+    border-radius: 3px;
+    color: var(--v4-ink);
+    font-family: var(--v4-font-display);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .nav-overlay nav ol {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: grid;
+    gap: 4px;
+    align-content: center;
+  }
+  .nav-overlay nav ol li a {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 16px;
+    align-items: baseline;
+    min-height: 56px;
+    padding: 14px 4px;
+    font-family: var(--v4-font-display);
+    font-weight: 500;
+    font-size: clamp(28px, 8vw, 40px);
+    letter-spacing: -0.01em;
+    color: var(--v4-ink);
+    text-decoration: none;
+    border-bottom: 0.5px solid var(--v4-rule);
+    transition: color 150ms var(--ease);
+  }
+  .nav-overlay nav ol li a:hover { color: var(--v4-accent); }
+  .nav-overlay nav ol li a .num {
+    font-family: var(--v4-font-display);
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--v4-accent);
+    letter-spacing: 0.06em;
+    padding-top: 2px;
+  }
+  .nav-overlay-foot {
+    display: flex; justify-content: flex-end;
+  }
+
+  /* Floating CTA — hidden by default, revealed after hero. Only visible at
+     mobile widths via the media query below. */
+  .cta-float {
+    position: fixed;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0));
+    z-index: 60;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    min-height: 52px;
+    background: var(--v4-ink);
+    color: #fff;
+    text-decoration: none;
+    font-family: var(--v4-font-display);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    border-radius: 999px;
+    box-shadow: 0 10px 32px rgba(17,17,17,0.22), 0 2px 6px rgba(17,17,17,0.12);
+    transform: translateY(16px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms var(--ease), transform 240ms var(--ease);
+  }
+  .cta-float.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .cta-float:hover { background: var(--v4-accent); }
+  .cta-float .arr { font-size: 15px; line-height: 1; }
+
+  /* ─── Mobile media layer ─── */
+  @media (max-width: 720px) {
+    /* Hide desktop nav links + status; show hamburger. */
+    nav.top .nav-right { display: none; }
+    nav.top .nav-burger { display: inline-flex; }
+
+    /* Section rhythm tightens. */
+    section.chap { padding: 56px 0; }
+    section.chap > .wrap > header.chap-h { margin-bottom: 40px; gap: 16px; }
+
+    /* Type scale — moderate, tighter. */
+    .hero h1 { font-size: clamp(40px, 10vw, 52px); line-height: 1.02; }
+    .hero .lede { font-size: 17px; }
+    section.chap h2 { font-size: clamp(28px, 8vw, 38px); }
+    .conf-grid .dateplate h3,
+    .call .status-block h3,
+    .funding .fgrid .copy h2 { font-size: clamp(24px, 7vw, 32px); }
+
+    /* HERO — single column. Keep the pulsing mark (team wants it captivating on mobile too). */
+    .hero .hero-grid { grid-template-columns: 1fr; gap: 32px; justify-items: start; }
+    .hero .mark-stage { justify-content: flex-start; }
+    .hero .mark-stage svg { width: 56px; }
+    .hero h1 {
+      text-align: left;
+      margin-left: 0;
+      margin-right: 0;
+      max-width: none;
+    }
+    .hero .lede {
+      text-align: left;
+      margin-left: 0;
+      margin-right: 0;
+    }
+    .hero .cta-group { justify-content: flex-start; }
+    .hero .meta-row .cell .v { font-size: 15px; }
+    /* Show a brief, mobile-tuned lede — the desktop one is hidden here and
+       the shorter one appears via CSS; much more scannable on a phone. */
+    .hero .lede.desktop { display: none; }
+    .hero .lede.mobile  { display: block; }
+
+    /* CONFERENCE — stack. Dateplate is NOT sticky: users found the program
+       cards scrolling under it visually confusing, per team feedback. */
+    .conf-grid { grid-template-columns: 1fr; gap: 24px; }
+    .dateplate {
+      padding: 24px;
+    }
+    .dateplate .big { font-size: 40px; }
+    .dateplate .meta .row { padding: 10px 0; }
+
+    /* Program: horizontal scroll-snap carousel. */
+    .program {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: 16px;
+      padding: 4px 16px 12px;
+      margin: 0 -16px; /* bleed to edge */
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .program::-webkit-scrollbar { display: none; }
+    .program .prog-item {
+      flex: 0 0 78%;
+      min-width: 260px;
+      scroll-snap-align: start;
+      /* 3 rows: idx+title | description | count. idx sits col 1 row 1,
+         body spans col 2 rows 1-2, count spans both cols in row 3
+         on its own baseline so it never collides with the heading. */
+      grid-template-columns: 40px 1fr;
+      grid-template-rows: auto 1fr auto;
+      gap: 8px 14px;
+      padding: 20px;
+    }
+    .program .prog-item .idx { grid-column: 1; grid-row: 1; }
+    .program .prog-item .body { grid-column: 2; grid-row: 1 / span 2; }
+    .program .prog-item .count {
+      grid-column: 1 / -1;
+      grid-row: 3;
+      padding-top: 14px;
+      margin-top: 4px;
+      border-top: 0.5px solid var(--v4-rule);
+    }
+
+    /* OPEN CALL */
+    .call { grid-template-columns: 1fr; gap: 32px; }
+    .call .status-block { padding: 24px; }
+    .call .mail-wait { flex-direction: column; padding: 8px; }
+    .call .mail-wait input { min-height: 52px; font-size: 16px; /* avoid iOS zoom */ }
+    .call .mail-wait button { min-height: 52px; }
+
+    /* PARTNERS — horizontal scroll carousel. */
+    .partners {
+      display: flex;
+      grid-template-columns: none;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: 16px;
+      padding: 4px 16px 12px;
+      margin: 0 -16px;
+      border-left: 0;
+      border-top: 0;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .partners::-webkit-scrollbar { display: none; }
+    .partner {
+      flex: 0 0 80%;
+      min-width: 260px;
+      scroll-snap-align: start;
+      border: 0.5px solid var(--v4-rule);
+      border-radius: 8px;
+      background: #fff;
+      padding: 20px;
+    }
+
+    /* CONTACT */
+    .contact-grid { grid-template-columns: 1fr; gap: 24px; }
+    .contact-card { padding: 24px; }
+
+    /* FUNDING / FOOTER */
+    .funding { padding: 64px 0; }
+    .funding .fgrid { grid-template-columns: 1fr; gap: 32px; }
+    .funding .vf-block a.vf { padding: 24px; }
+
+    footer.site { padding: 56px 0 24px; }
+    footer.site .ftop { grid-template-columns: 1fr; gap: 32px; }
+
+    /* Touch targets — links in body copy grow their hit area. */
+    a { min-height: auto; }
+    .prog-item, .partner, .contact-card a { min-height: 52px; }
+
+    /* Show the floating CTA on mobile. */
+    .cta-float { display: inline-flex; }
+
+    /* Pad the bottom of the page so the floating CTA never overlaps the footer links. */
+    footer.site { padding-bottom: 88px; }
+  }
+
+  /* Very small phones (<400px) — extra compression. */
+  @media (max-width: 400px) {
+    .wrap { padding: 0 14px; }
+    .hero { padding-top: 24px; }
+    section.chap { padding: 48px 0; }
+    .cta-float { right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0)); padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ──────────── NAV ──────────── -->
+<nav class="top" aria-label="Primary">
+  <div class="wrap row">
+    <a href="#top" class="brand" aria-label="V4·AIM home">
+      <svg class="mark" viewBox="-22.02 -22.02 44.04 44.04" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="0" y1="-16" x2="16" y2="0"></line>
+          <line x1="16" y1="0" x2="0" y2="16"></line>
+          <line x1="0" y1="16" x2="-16" y2="0"></line>
+          <line x1="-16" y1="0" x2="0" y2="-16"></line>
+          <line x1="0" y1="-16" x2="0" y2="16"></line>
+          <line x1="-16" y1="0" x2="16" y2="0"></line>
+        </g>
+        <g fill="currentColor" stroke="none">
+          <circle cx="0" cy="-16" r="3.52"></circle>
+          <circle cx="16" cy="0" r="3.52"></circle>
+          <circle cx="0" cy="16" r="3.52"></circle>
+          <circle cx="-16" cy="0" r="3.52"></circle>
+        </g>
+      </svg>
+      <span class="wm">[V4<span class="dot">·</span>AIM]</span>
+    </a>
+
+    <div class="nav-right">
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#conference">Conference</a></li>
+        <li><a href="#open-call">Open call</a></li>
+        <li><a href="#partners">Partners</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <span class="status" aria-label="Project status">Funded · 2026</span>
+    </div>
+
+    <!-- Mobile hamburger trigger, hidden on desktop via media query. -->
+    <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-overlay" type="button">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile fullscreen menu overlay (hidden unless opened; only visible via mobile styles). -->
+<div class="nav-overlay" id="nav-overlay" role="dialog" aria-modal="true" aria-label="Site menu" hidden>
+  <div class="nav-overlay-inner">
+    <div class="nav-overlay-top">
+      <span class="wm">[V4<span class="dot">·</span>AIM]</span>
+      <button class="nav-overlay-close" id="nav-overlay-close" aria-label="Close menu" type="button">Close</button>
+    </div>
+    <nav aria-label="Primary mobile">
+      <ol>
+        <li><a href="#about" data-nav-link><span class="num">01</span>About</a></li>
+        <li><a href="#conference" data-nav-link><span class="num">02</span>Conference</a></li>
+        <li><a href="#open-call" data-nav-link><span class="num">03</span>Open call</a></li>
+        <li><a href="#partners" data-nav-link><span class="num">04</span>Partners</a></li>
+        <li><a href="#contact" data-nav-link><span class="num">05</span>Contact</a></li>
+      </ol>
+    </nav>
+    <div class="nav-overlay-foot">
+      <span class="status" aria-label="Project status">Funded · 2026</span>
+    </div>
+  </div>
+</div>
+
+<main id="main">
+
+<!-- ──────────── HERO ──────────── -->
+<header class="hero" id="top">
+  <div class="wrap">
+
+    <div class="meta-row">
+      <div class="cell">
+        <span class="k">Event</span>
+        <span class="v">International V4 AI Methods Conference</span>
+      </div>
+      <div class="cell">
+        <span class="k">Dates</span>
+        <span class="v tnum">23–25 April 2027</span>
+      </div>
+      <div class="cell">
+        <span class="k">Location</span>
+        <span class="v">Kostelec nad Černými Lesy, CZ</span>
+      </div>
+    </div>
+
+    <div class="hero-grid">
+      <div>
+      <div class="mark-stage" aria-hidden="true">
+        <svg viewBox="-22.02 -22.02 44.04 44.04">
+          <g stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="0" y1="-16" x2="16" y2="0"></line>
+            <line x1="16" y1="0" x2="0" y2="16"></line>
+            <line x1="0" y1="16" x2="-16" y2="0"></line>
+            <line x1="-16" y1="0" x2="0" y2="-16"></line>
+            <line x1="0" y1="-16" x2="0" y2="16"></line>
+            <line x1="-16" y1="0" x2="16" y2="0"></line>
+          </g>
+          <g fill="currentColor" stroke="none">
+            <circle cx="0" cy="-16" r="3.52"></circle>
+            <circle cx="16" cy="0" r="3.52"></circle>
+            <circle cx="0" cy="16" r="3.52"></circle>
+            <circle cx="-16" cy="0" r="3.52"></circle>
+          </g>
+          <g fill="none" stroke="#E63946">
+            <circle class="ring ring-1" cx="0" cy="0" r="0"></circle>
+            <circle class="ring ring-2" cx="0" cy="0" r="0"></circle>
+            <circle class="ring ring-3" cx="0" cy="0" r="0"></circle>
+          </g>
+        </svg>
+      </div>
+
+      <div class="hero-copy">
+        <h1>
+          A cross-disciplinary Visegrad <span class="hl">conference on AI&nbsp;methods</span><span class="brk">.</span>
+        </h1>
+        <p class="lede desktop">
+          V4·AIM convenes researchers from the Czech Republic, Slovakia, Poland, and Hungary around shared AI methods for computer vision and large language models, across disciplines that rarely meet in the same room.
+        </p>
+        <p class="lede mobile">
+          Shared AI methods for computer vision and LLMs, across V4 research disciplines.
+        </p>
+        <div class="cta-group">
+          <a class="btn" href="#open-call">
+            Notify me when the call opens
+            <span class="arr" aria-hidden="true">→</span>
+          </a>
+          <a class="btn ghost" href="#about">
+            Read the brief
+            <span class="arr" aria-hidden="true">↓</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ──────────── ABOUT ──────────── -->
+<section class="chap" id="about">
+  <div class="wrap">
+    <header class="chap-h">
+      <span class="eyebrow"><span class="num">01 /</span>About</span>
+      <h2>A method-centric conference for Central European research.</h2>
+    </header>
+
+    <!-- Objectives aside removed per request; about section is now a single
+         column with lede + three scannable fact blocks. -->
+    <div class="about-grid single">
+      <div class="prose">
+        <dl class="fact-blocks">
+          <div class="fact">
+            <dt><span class="fn">01</span>What it is</dt>
+            <dd>A cross-disciplinary, cross-border knowledge conference grounded in the Visegrad region.</dd>
+          </div>
+          <div class="fact">
+            <dt><span class="fn">02</span>How it runs</dt>
+            <dd>In-person conference on two method families: <b>computer vision</b> and <b>LLMs</b>, followed by a shared digital repository and online working groups.</dd>
+          </div>
+          <div class="fact">
+            <dt><span class="fn">03</span>Who can join</dt>
+            <dd>Researchers, doctoral candidates, and advanced Master's students from V4 universities. Travel and lodging covered for selected participants from partner countries.</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────── CONFERENCE ──────────── -->
+<section class="chap band" id="conference">
+  <div class="wrap">
+    <header class="chap-h">
+      <span class="eyebrow"><span class="num">02 /</span>The Conference</span>
+      <h2>Three days. Four keynotes. Sixteen panelists.</h2>
+    </header>
+
+    <div class="conf-grid">
+      <div class="dateplate">
+        <div>
+          <div class="big tnum">23<span class="mo">–</span>25</div>
+          <div style="font-family: var(--v4-font-display); font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; color: #C9CAD0; margin-top: 10px;">April 2027</div>
+        </div>
+        <div class="meta">
+          <div class="row"><span class="k">Venue</span><span class="v">Kostelec nad Černými&nbsp;Lesy Castle</span></div>
+          <div class="row"><span class="k">Region</span><span class="v">≈ 30 km east of Prague</span></div>
+          <div class="row"><span class="k">Format</span><span class="v">In-person, with online options</span></div>
+          <div class="row"><span class="k">Language</span><span class="v">English</span></div>
+        </div>
+      </div>
+
+      <div class="program" aria-label="Program overview">
+        <article class="prog-item">
+          <span class="idx">P.01</span>
+          <div class="body">
+            <h3>Keynote lectures</h3>
+            <p>Four invited keynotes framing the state of AI methodology in computer vision and large language models.</p>
+          </div>
+          <span class="count tnum">4 speakers</span>
+        </article>
+
+        <article class="prog-item">
+          <span class="idx">P.02</span>
+          <div class="body">
+            <h3>Thematic sessions</h3>
+            <p>Sessions led by V4 partner institutions. Method-centric, with room for disciplinary cross-talk.</p>
+          </div>
+          <span class="count tnum">16 panelists</span>
+        </article>
+
+        <article class="prog-item">
+          <span class="idx">P.03</span>
+          <div class="body">
+            <h3>Hands-on workshops</h3>
+            <p>Working sessions using the Metacentrum HPC infrastructure. CV annotation pipelines and LLM prompting workflows.</p>
+          </div>
+          <span class="count tnum">3 workshops</span>
+        </article>
+
+        <article class="prog-item">
+          <span class="idx">P.04</span>
+          <div class="body">
+            <h3>Student activities</h3>
+            <p>Structured time for doctoral and advanced Master's students to present in progress work and meet peers.</p>
+          </div>
+          <span class="count tnum">Cohort</span>
+        </article>
+      </div>
+    </div>
+
+    <!-- Participation conf-note removed per request. -->
+    <div class="conf-note" hidden>
+      <span class="label">Participation</span>
+      Travel and accommodation are covered for selected participants from partner countries. Open to 20–30 researchers and 20–30 doctoral / advanced Master's students; broader V4 academic community reached through online outputs.
+    </div>
+  </div>
+</section>
+
+<!-- ──────────── OPEN CALL ──────────── -->
+<section class="chap" id="open-call">
+  <div class="wrap">
+    <header class="chap-h">
+      <span class="eyebrow"><span class="num">03 /</span>Open Call</span>
+      <h2>Call opens late 2026.</h2>
+    </header>
+
+    <div class="call">
+      <div class="status-block">
+        <span class="tag">Status · TBD</span>
+        <h3>Registration not yet open</h3>
+        <p>The exact call-for-participation dates are being finalized with partner institutions. Leave an email and we'll send you the opening date and application form. Nothing else.</p>
+
+        <form class="mail-wait" id="waitlist" novalidate>
+          <label for="email-wait" style="position:absolute;left:-9999px;">Email</label>
+          <input id="email-wait" type="email" placeholder="name@institution.edu" required />
+          <button type="submit">Notify me</button>
+        </form>
+      </div>
+
+      <div>
+        <span class="eyebrow" style="display:block;margin-bottom:20px;"><span class="num">//</span>Selection process</span>
+        <div class="selection">
+          <div class="step">
+            <span class="n tnum">01</span>
+            <div>
+              <h4>Open call via partner institutions</h4>
+              <p>Announced through partner university mailing lists and professional networks across the V4 region.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="n tnum">02</span>
+            <div>
+              <h4>Short motivation statement</h4>
+              <p>Applicants submit a short statement on how AI methodology intersects their current research.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="n tnum">03</span>
+            <div>
+              <h4>Selection &amp; notification</h4>
+              <p>Selection balances disciplinary breadth, career stage, and geographic representation across V4.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="n tnum">04</span>
+            <div>
+              <h4>Travel &amp; accommodation covered</h4>
+              <p>Selected participants from partner countries have travel and lodging at the venue covered by the grant.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────── PARTNERS ──────────── -->
+<section class="chap band" id="partners">
+  <div class="wrap">
+    <header class="chap-h">
+      <span class="eyebrow"><span class="num">04 /</span>Partners</span>
+      <h2>Partner institutions across the Visegrad region.</h2>
+    </header>
+
+    <div class="partners">
+      <a class="partner" href="https://cuni.cz/UKEN-1.html" target="_blank" rel="noopener">
+        <span class="idx">01</span>
+        <span class="name">
+          <span class="org">Charles University</span>
+          <span class="dept">Department of Philosophy and History of Science, Faculty of Science</span>
+          <span class="country lead">Czech Republic</span>
+        </span>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+
+      <div class="partner" aria-hidden="true">
+        <span class="idx">02</span>
+        <span class="name">
+          <span class="org" style="color:var(--v4-muted);">TBD</span>
+          <span class="dept">Partner institution</span>
+          <span class="country">—</span>
+        </span>
+        <span class="arrow" style="opacity:0;" aria-hidden="true">↗</span>
+      </div>
+
+      <div class="partner" aria-hidden="true">
+        <span class="idx">03</span>
+        <span class="name">
+          <span class="org" style="color:var(--v4-muted);">TBD</span>
+          <span class="dept">Partner institution</span>
+          <span class="country">—</span>
+        </span>
+        <span class="arrow" style="opacity:0;" aria-hidden="true">↗</span>
+      </div>
+
+      <div class="partner" aria-hidden="true">
+        <span class="idx">04</span>
+        <span class="name">
+          <span class="org" style="color:var(--v4-muted);">TBD</span>
+          <span class="dept">Partner institution</span>
+          <span class="country">—</span>
+        </span>
+        <span class="arrow" style="opacity:0;" aria-hidden="true">↗</span>
+      </div>
+
+      <div class="partner" aria-hidden="true">
+        <span class="idx">05</span>
+        <span class="name">
+          <span class="org" style="color:var(--v4-muted);">TBD</span>
+          <span class="dept">Partner institution</span>
+          <span class="country">—</span>
+        </span>
+        <span class="arrow" style="opacity:0;" aria-hidden="true">↗</span>
+      </div>
+
+      <div class="partner" aria-hidden="true">
+        <span class="idx">06</span>
+        <span class="name">
+          <span class="org" style="color:var(--v4-muted);">TBD</span>
+          <span class="dept">Partner institution</span>
+          <span class="country">—</span>
+        </span>
+        <span class="arrow" style="opacity:0;" aria-hidden="true">↗</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────── CONTACT ──────────── -->
+<section class="chap" id="contact">
+  <div class="wrap">
+    <header class="chap-h">
+      <span class="eyebrow"><span class="num">05 /</span>Contact</span>
+      <h2>Questions about the conference or project.</h2>
+    </header>
+
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="name">Mgr. Peter Kutsos</div>
+        <div class="role">Project coordinator · V4·AIM</div>
+        <dl class="dl">
+          <dt>Email</dt>
+          <dd><a href="mailto:petkout1@gmail.com">petkout1@gmail.com</a></dd>
+        </dl>
+        <dl class="dl">
+          <dt>Phone</dt>
+          <dd class="tnum">+420 775 052 892</dd>
+        </dl>
+        <dl class="dl">
+          <dt>Dept.</dt>
+          <dd>Department of Philosophy and History of Science</dd>
+        </dl>
+        <dl class="dl">
+          <dt>Institution</dt>
+          <dd>Faculty of Science, Charles University</dd>
+        </dl>
+      </div>
+
+      <div class="contact-aux">
+        <div>
+          <h4>Lead organization</h4>
+          <p class="addr">Univerzita Karlova / Charles University<br/>Ovocný trh 560/5<br/>116 36 Prague, Czech Republic</p>
+        </div>
+        <div>
+          <h4>Technical contact</h4>
+          <p>Mgr. et Mgr. Petr Chlup, repository and code.<br/><a href="mailto:chlupp@natur.cuni.cz" style="border-bottom:1px solid var(--v4-accent);">chlupp@natur.cuni.cz</a></p>
+        </div>
+        <div>
+          <h4>IVF contact (compliance)</h4>
+          <p>Zuzana Pavlíková, project manager, International Visegrad Fund.<br/><a href="mailto:pavlikova@visegradfund.org" style="border-bottom:1px solid var(--v4-accent);">pavlikova@visegradfund.org</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────── FUNDING (Visegrad) ──────────── -->
+<section class="funding" id="funding" aria-labelledby="funding-h">
+  <div class="wrap">
+    <div class="fgrid">
+      <div class="vf-block">
+        <a class="vf" href="https://www.visegradfund.org" target="_blank" rel="noopener" aria-label="International Visegrad Fund">
+          <img class="vf-logotype" src="brand/ivf-logotype-black.png" alt="International Visegrad Fund" />
+        </a>
+        <div class="caption">visegradfund.org · Project ID 22610317</div>
+      </div>
+
+      <div class="copy">
+        <h2 id="funding-h">Funded by the International Visegrad Fund.</h2>
+        <p>
+          V4·AIM is co-financed by the governments of Czechia, Hungary, Poland, and Slovakia through Visegrad Grants from the International Visegrad Fund. The mission of the fund is to advance ideas for sustainable regional cooperation in Central Europe.
+        </p>
+        <div class="ids">
+          <span class="k">Grant programme</span><span class="v">Visegrad Grants</span>
+          <span class="k">Project ID</span><span class="v">22610317</span>
+          <span class="k">Implementation</span><span class="v">20 May 2026 / 1 Nov 2027</span>
+          <span class="k">Approved</span><span class="v">23 April 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ──────────── FOOTER ──────────── -->
+<footer class="site" aria-label="Site footer">
+  <div class="wrap">
+    <div class="ftop">
+      <div class="brand-blk">
+        <svg class="mark" viewBox="-22.02 -22.02 44.04 44.04" aria-hidden="true">
+          <g stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="0" y1="-16" x2="16" y2="0"></line>
+            <line x1="16" y1="0" x2="0" y2="16"></line>
+            <line x1="0" y1="16" x2="-16" y2="0"></line>
+            <line x1="-16" y1="0" x2="0" y2="-16"></line>
+            <line x1="0" y1="-16" x2="0" y2="16"></line>
+            <line x1="-16" y1="0" x2="16" y2="0"></line>
+          </g>
+          <g fill="currentColor" stroke="none">
+            <circle cx="0" cy="-16" r="3.52"></circle>
+            <circle cx="16" cy="0" r="3.52"></circle>
+            <circle cx="0" cy="16" r="3.52"></circle>
+            <circle cx="-16" cy="0" r="3.52"></circle>
+          </g>
+        </svg>
+        <div class="wm">[V4<span class="dot">·</span>AIM]</div>
+        <p>International V4 AI Methods Conference. A project of Charles University, Faculty of Science.</p>
+      </div>
+
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#conference">Conference</a></li>
+          <li><a href="#open-call">Open call</a></li>
+          <li><a href="#partners">Partners</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="https://www.visegradfund.org" target="_blank" rel="noopener">Visegrad Fund ↗</a></li>
+          <li><a href="https://cuni.cz/UKEN-1.html" target="_blank" rel="noopener">Charles University ↗</a></li>
+          <li><a href="mailto:petkout1@gmail.com">Contact coordinator</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>IVF on social</h4>
+        <ul>
+          <li><a href="https://www.facebook.com/VisegradFund" target="_blank" rel="noopener">Facebook ↗</a></li>
+          <li><a href="https://twitter.com/VisegradFund" target="_blank" rel="noopener">Twitter / X ↗</a></li>
+          <li><a href="https://www.instagram.com/visegradfund" target="_blank" rel="noopener">Instagram ↗</a></li>
+        </ul>
+      </div>
+
+      <p class="support">
+        The project is co-financed by the governments of Czechia, Hungary, Poland and Slovakia through Visegrad Grants from the International Visegrad Fund. The mission of the fund is to advance ideas for sustainable regional cooperation in Central Europe.
+      </p>
+    </div>
+
+    <div class="fbottom">
+      <span>© 2026 V4·AIM · Charles University, Faculty of Science</span>
+      <span>Project ID 22610317 · Rev. 2026-04</span>
+      <span>WCAG 2.1 AA target</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating mobile CTA — appears after hero scroll, scrolls to waitlist form. -->
+<a href="#open-call" class="cta-float" id="cta-float" aria-label="Join the waitlist">
+  <span class="label">Join waitlist</span>
+  <span class="arr" aria-hidden="true">→</span>
+</a>
+
+<script>
+  // Mobile hamburger + overlay menu
+  (function () {
+    const burger = document.getElementById('nav-burger');
+    const overlay = document.getElementById('nav-overlay');
+    const closeBtn = document.getElementById('nav-overlay-close');
+    if (!burger || !overlay) return;
+
+    const open = () => {
+      overlay.hidden = false;
+      // Let the attribute change commit before we add the open class so the
+      // CSS transition actually runs.
+      requestAnimationFrame(() => overlay.classList.add('open'));
+      burger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    };
+    const close = () => {
+      overlay.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      // Wait for the fade-out before hiding from AT.
+      setTimeout(() => { overlay.hidden = true; }, 220);
+    };
+
+    burger.addEventListener('click', () => {
+      if (overlay.classList.contains('open')) close(); else open();
+    });
+    closeBtn && closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) close();
+    });
+    overlay.querySelectorAll('[data-nav-link]').forEach(a => {
+      a.addEventListener('click', close);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+    });
+  })();
+
+  // Floating CTA visibility: show after the user scrolls past the hero,
+  // hide while the open-call section is in view (form is already there).
+  (function () {
+    const cta = document.getElementById('cta-float');
+    const hero = document.getElementById('top');
+    const openCall = document.getElementById('open-call');
+    if (!cta || !hero) return;
+
+    const update = () => {
+      const heroBottom = hero.getBoundingClientRect().bottom;
+      const ocRect = openCall ? openCall.getBoundingClientRect() : null;
+      const pastHero = heroBottom < 80;
+      const inForm = ocRect && ocRect.top < window.innerHeight * 0.6 && ocRect.bottom > window.innerHeight * 0.2;
+      cta.classList.toggle('show', pastHero && !inForm);
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+  })();
+</script>
+
+<script>
+  // Waitlist form — submits to Formspree for email storage.
+  // Sign up at https://formspree.io, create a form, and replace YOUR_FORM_ID below.
+  (function () {
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
+
+    const form = document.getElementById('waitlist');
+    if (!form) return;
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const input = form.querySelector('input[type="email"]');
+      const btn   = form.querySelector('button');
+
+      if (!input.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
+        input.focus();
+        input.style.color = 'var(--v4-accent)';
+        setTimeout(() => { input.style.color = ''; }, 1600);
+        return;
+      }
+
+      btn.textContent = 'Sending…';
+      btn.disabled    = true;
+
+      try {
+        const res = await fetch(FORMSPREE_ENDPOINT, {
+          method:  'POST',
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ email: input.value })
+        });
+
+        if (res.ok) {
+          form.classList.add('ok');
+          btn.textContent      = 'Added ✓';
+          input.value          = '';
+          input.placeholder    = "You're on the list.";
+          input.disabled       = true;
+        } else {
+          btn.textContent = 'Try again';
+          btn.disabled    = false;
+        }
+      } catch (_) {
+        btn.textContent = 'Try again';
+        btn.disabled    = false;
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>

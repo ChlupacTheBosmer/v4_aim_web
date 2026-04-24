@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 271.6 48.3" width="272" height="48">
+  <rect width="100%" height="100%" fill="#0e0e0f"></rect>
+  <g transform="translate(22.02, 24.15)">
+    <g stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="0" y1="-16" x2="16" y2="0"></line>
+      <line x1="16" y1="0" x2="0" y2="16"></line>
+      <line x1="0" y1="16" x2="-16" y2="0"></line>
+      <line x1="-16" y1="0" x2="0" y2="-16"></line>
+      <line x1="0" y1="-16" x2="0" y2="16"></line>
+      <line x1="-16" y1="0" x2="16" y2="0"></line>
+    </g>
+    <g fill="#FFFFFF" stroke="none">
+      <circle cx="0" cy="-16" r="3.52"></circle>
+      <circle cx="16" cy="0" r="3.52"></circle>
+      <circle cx="0" cy="16" r="3.52"></circle>
+      <circle cx="-16" cy="0" r="3.52"></circle>
+    </g>
+  </g>
+  <text x="62.04" y="38.4" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-weight="500" font-size="42" letter-spacing="1">
+    <tspan fill="#FFFFFF">[</tspan><tspan fill="#FFFFFF">V4</tspan><tspan fill="#FFFFFF" opacity="0.65">·</tspan><tspan fill="#FFFFFF">AIM</tspan><tspan fill="#FFFFFF">]</tspan>
+  </text>
+</svg>
