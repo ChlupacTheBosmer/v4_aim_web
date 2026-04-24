@@ -1253,6 +1253,17 @@
     section.chap { padding: 48px 0; }
     .cta-float { right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0)); padding: 12px 16px; }
   }
+
+  /* This site is light-mode only. Override tokens.css dark-mode block so
+     system dark mode doesn't flip --v4-ink to near-white on white backgrounds. */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --v4-ink:   #0F1115;
+      --v4-paper: #F3F4F6;
+      --v4-muted: #6B7280;
+      --v4-rule:  rgba(15,17,21,0.10);
+    }
+  }
 </style>
 </head>
 <body>
